@@ -1,4 +1,5 @@
 const db = require("../connection/Connection")
+const jwt = require("jsonwebtoken")
 
 const login = (req,res) => {
     // get all data
@@ -14,18 +15,21 @@ const login = (req,res) => {
             if(err) throw err
 
             if(result.length === 1){
-                db.query(`UPDATE user SET is_login = 1 WHERE username = ? AND password = ?`, [data.username, data.password],(err,result) => {
+                jwt.sign({id: result[0].id, username: result[0].username, password: result[0].password}, "123abc", (err,token) => {
                     try {
                         if(err) throw err
 
                         res.status(200).send({
-                            error: false,
-                            message: `Login Success`
+                            error:false,
+                            message: "Login Success",
+                            data: {
+                                token: token
+                            }
                         })
                     } catch (error) {
                         res.status(500).send({
-                            error: true,
-                            message: error.message
+                            error:true,
+                            message:`Token Error`
                         })
                     }
                 })

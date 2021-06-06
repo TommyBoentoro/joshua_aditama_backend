@@ -2,20 +2,23 @@ const db = require("../connection/Connection")
 
 const addData = (req,res)=> {
     try {
-            // Get all Data
-        const data = req.body
+        // Get all Data
+        let data = req.body
+        let dataToken = req.dataToken
         console.log(data)
+        console.log(dataToken)
 
         // Verifikasi all data
         if(!data.title || !data.description) throw {message: `All data must be filled`}
 
         let dataToInsert = {
             title: data.title,
-            description: data.description
+            description: data.description,
+            user_id: dataToken.id
         }
 
         // Insert data
-        db.query(`INSERT INTO dataproject SET ?`, [data.title, data.description], (err,result)=> {
+        db.query(`INSERT INTO dataproject SET ?`, dataToInsert, (err,result)=> {
             try {
                 if(err) throw err
 
@@ -40,13 +43,19 @@ const addData = (req,res)=> {
 }
 
 const getData = (req,res) => {
-    db.query(`SELECT * FROM dataproject`, (err,result) => {
+
+    // Get Data Token
+    let dataToken = req.dataToken
+    let idUser = req.dataToken.id
+
+    db.query(`SELECT * FROM dataproject WHERE user_id = ${idUser}` , (err,result) => {
         try {
             if(err) throw err
 
             res.status(200).send({
                 error:false,
-                message: result
+                message: `Get Data Success`,
+                Data: result
             })
         } catch (error) {
             res.status(500).send({

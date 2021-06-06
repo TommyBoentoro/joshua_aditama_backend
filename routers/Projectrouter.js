@@ -4,7 +4,10 @@ const Router = express.Router()
 // Import Controller
 const ProjectContoller = require("./../controllers/Projectcontroller")
 
-Router.post("/addData", ProjectContoller.addData)
-Router.get("/getData", ProjectContoller.getData)
+// Import JWT
+const jwtVerify = require("./../middleware/JWT")
+
+Router.post("/addData",jwtVerify, ProjectContoller.addData)
+Router.post("/getData",jwtVerify, ProjectContoller.getData)
 
 module.exports = Router
