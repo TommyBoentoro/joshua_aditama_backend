@@ -1,4 +1,5 @@
 const db = require("../connection/Connection")
+const multer = require("multer")
 
 const addData = (req,res)=> {
     try {
@@ -67,7 +68,25 @@ const getData = (req,res) => {
 
 }
 
+// Multer 
+// const fileStorageEngine = multer.diskStorage({
+//     destination: (req,file,cb) => {
+//         cb(null, "./images");
+//     },
+//     filename: (req,file,cb) => {
+//         cb(null, Date.now() + "--" + file.originalname);
+//     },
+// })
+
+// const upload = multer({storage: fileStorageEngine});
+
+// app.post("/single", upload.single("image"), (req,res) => {
+//     console.log(req.file);
+//     res.send(`Single File Upload Success`)
+// })
+
 module.exports={
     addData: addData,
-    getData: getData
+    getData: getData,
+    // uploadImage : uploadImage
 }

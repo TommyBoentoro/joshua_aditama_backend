@@ -5,5 +5,6 @@ const Router = express.Router()
 const UserController = require("./../controllers/UserController")
 
 Router.post("/login", UserController.login)
+Router.post("/send-email", UserController.sendEmail)
 
 module.exports = Router
