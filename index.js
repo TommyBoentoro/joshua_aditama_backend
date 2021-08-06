@@ -9,6 +9,7 @@ const projectRouter = require("./routers/Projectrouter")
 
 // initialize cors -> biar API bisa diakses front-end
 app.use(cors())
+app.use(`/images_upload`, express.static(`images_upload`));
 
 // Initialize body parser
 app.use(express.json())

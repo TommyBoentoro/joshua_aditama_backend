@@ -21,12 +21,24 @@ const login = (req,res) => {
                 jwt.sign({id: result[0].id, username: result[0].username, password: result[0].password}, "123abc", (err,token) => {
                     try {
                         if(err) throw err
+                        
+                        db.query(`UPDATE user SET is_login = 1`, (err,result) => {
+                            try {
+                                if(err) throw err
 
-                        res.status(200).send({
-                            error:false,
-                            message: "Login Success",
-                            data: {
-                                token: token
+                                res.status(200).send({
+                                    error:false,
+                                    message: `Login Success`,
+                                    data : {
+                                        token: token
+                                    }
+                                })
+                            } catch (error) {
+                                res.status(500).send({
+                                    error: true,
+                                    message: `Update login Failed`,
+                                    detail: error.message
+                                })
                             }
                         })
                     } catch (error) {
@@ -40,7 +52,7 @@ const login = (req,res) => {
             }else{
                 res.status(200).send({
                     error:true,
-                    message: `Email & Password Does Not Match`
+                    message: error.messsage
                 })
             }
             
@@ -109,9 +121,95 @@ const sendEmail = (req,res) => {
         })
 }
 
+const logout = (req,res) => {
+    // Get Token
+    let data = req.dataToken
+    
+    // Patch is_login menjadi 0
+    db.query(`SELECT * FROM user WHERE id=?`,data.id, (err,result) => {
+        try {
+            if(err) throw err
+            console.log(result)
+                try {
+                    if(err) throw err
+
+                    db.query(`UPDATE user SET is_login = 0 WHERE id = ?`, data.id, (err,result) =>{
+                        try {
+                            if (err) throw err
+                            console.log(result)
+                            res.status(200).send({
+                                error: false,
+                                message: `Logout Success`,
+                            })
+                        } catch (error) {
+                            res.status(500).send({
+                                error:true,
+                                message: `Update is_login error`,
+                                detail: error.message
+                            })
+                        }
+                    })
+                } catch (error) {
+                    res.status(500).send({
+                        error: true,
+                        message: error.message
+                    })
+                }
+        } catch (error) {
+            res.status(500).send({
+                error: true,
+                message: `Logout Error`,
+                detail: error.message
+            })
+        }
+    })
+}
+
+const change= (req,res) =>{
+   
+    let dataInput = req.body
+    let data = req.dataToken
+  
+    console.log(data)
+    
+    // Patch new password
+    db.query(`SELECT * FROM user WHERE id=?`, data.id, (err,result) => {
+        try {
+            if(err) throw err
+
+ 
+                db.query(`UPDATE user set password = ?`, dataInput.newPassword, (err,result)=>{
+                    try {
+                        if(err) throw (err)
+
+                        res.status(200).send({
+                            error:false,
+                            message:"Password Changed"
+                        })
+                    } catch (error) {
+                        res.status(500).send({
+                            error: true,
+                            message: `Failed to change password`,
+                            detail: error.message
+                        })
+                    }
+                })
+            
+        } catch (error) {
+            res.status(500).send({
+                error: true,
+                message: `Failed to get id user`,
+                detail: error.message
+            })
+        }
+    })
+}
+
 
 module.exports = {
     login: login,
-    sendEmail: sendEmail
+    sendEmail: sendEmail,
+    logout: logout,
+    change : change
     
 }

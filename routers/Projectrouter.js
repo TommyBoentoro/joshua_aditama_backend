@@ -10,6 +10,11 @@ const multerUpload = require("./../middleware/multer")
 
 Router.post("/addData",jwtVerify, ProjectContoller.addData)
 Router.post("/getData",jwtVerify, ProjectContoller.getData)
-// Router.post("/uploadimage",multerUpload ,ProjectContoller.uploadImage)
+
+// Multer
+Router.post("/upload-image", ProjectContoller.uploadimage)
+Router.get("/get-product", ProjectContoller.getProduct)
+Router.delete("/delete-product/:idProduct", ProjectContoller.deleteProduct)
+Router.get("/project-detail/:idProduct", ProjectContoller.projectDetail)
 
 module.exports = Router
