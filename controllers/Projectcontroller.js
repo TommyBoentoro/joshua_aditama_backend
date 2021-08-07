@@ -160,7 +160,7 @@ const uploadimage = (req,res) => {
                 
                                     let imagePathLocation = req.files.map((value) => {
                                         return[
-                                            `http://localhost:4000/${value.path}`, dataproject_id, dataproject_user_id
+                                            `https://joshua-website-back-end.herokuapp.com/${value.path}`, dataproject_id, dataproject_user_id
                                         ]
                                     })
                                     console.log(imagePathLocation)
@@ -388,7 +388,7 @@ const deleteProduct = async (req,res) => {
         console.log(findImage)
 
         let oldFilesPatchLocation = findImage.map((value) => {
-            return value.image.replace(`http://localhost:4000/`, ``)
+            return value.image.replace(`https://joshua-website-back-end.herokuapp.com/`, ``)
         })
 
         console.log(oldFilesPatchLocation)
